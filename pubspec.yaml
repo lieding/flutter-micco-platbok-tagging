@@ -1,7 +1,7 @@
 name: micco_platbook_tagging
 description: "For intergration of platbook tagging"
 version: 0.0.1
-homepage:
+homepage: https://github.com/lieding/flutter-micco-platbok-tagging
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
