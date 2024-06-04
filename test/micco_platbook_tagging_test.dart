@@ -17,7 +17,7 @@ class MockMiccoPlatbookTaggingPlatform
   }
   
   @override
-  Future<Map<String, String>> predict(Map<String, String> input) {
+  Future<Map<String, List<LabelAndConfidence>>> predict(Map<String, String> input) {
     throw UnimplementedError();
   }
 }
