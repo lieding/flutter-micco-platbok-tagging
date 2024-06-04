@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import CoreML
+import NaturalLanguage
 
 let ModelUrl = "https://platbook-images.s3.eu-west-3.amazonaws.com/PlatTypeTag.mlmodel"
 let ModelName = "PlatTypeTag.mlmodel"
@@ -32,14 +33,11 @@ public class MiccoPlatbookTaggingPlugin: NSObject, FlutterPlugin {
         self.model = try MLModel(contentsOf: compiledModelURL)
       }
       guard let modell = self.model else { return nil }
-      let input = MLFeatureValue(string: input)
-      let modelInput = try MLDictionaryFeatureProvider(dictionary: ["text": input, "confidence": 0.0])
-      let result = try modell.prediction(from: modelInput)
-      print(String(describing: result.featureValue(for: "confidence")))
-      if let featureVal = result.featureValue(for: "label") {
-        return featureVal.stringValue
-      }
-      return nil
+      let nlmodel = try NLModel(mlModel: modell)
+      let predictionSet = nlmodel.predictedLabelHypotheses(for: input, maximumCount: 3)
+      let jsonEncoder = JSONEncoder()
+      let jsonData = try jsonEncoder.encode(predictionSet)
+      return String(data: jsonData, encoding: String.Encoding.utf8)
     } catch {
       print(error)
       return nil

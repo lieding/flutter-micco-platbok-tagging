@@ -25,7 +25,7 @@ abstract class MiccoPlatbookTaggingPlatform extends PlatformInterface {
 
   Future<String?> getPlatformVersion();
 
-  Future<Map<String, String>> predict(Map<String, String> input);
+  Future<Map<String, List<LabelAndConfidence>>> predict(Map<String, String> input);
 
   Future<void> loadLodel ();
 }

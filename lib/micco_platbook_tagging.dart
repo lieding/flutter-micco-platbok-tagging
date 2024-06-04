@@ -1,4 +1,5 @@
 
+import 'micco_platbook_tagging_method_channel.dart';
 import 'micco_platbook_tagging_platform_interface.dart';
 
 class MiccoPlatbookTagging {
@@ -6,7 +7,7 @@ class MiccoPlatbookTagging {
     return MiccoPlatbookTaggingPlatform.instance.getPlatformVersion();
   }
 
-  Future<Map<String, String>> predict (Map<String, String> input) {
+  Future<Map<String, List<LabelAndConfidence>>> predict (Map<String, String> input) {
     return MiccoPlatbookTaggingPlatform.instance.predict(input);
   }
 
