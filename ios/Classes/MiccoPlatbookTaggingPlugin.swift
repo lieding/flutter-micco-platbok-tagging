@@ -25,21 +25,25 @@ public class MiccoPlatbookTaggingPlugin: NSObject, FlutterPlugin {
   }
 
   private func predict (_ input: String) -> String? {
-    do {
-      if (self.model == nil) {
-        guard let documentUrl = getDocumentDir() else { return nil}
-        guard let url = URL(string: "\(documentUrl)/\(ModelName)") else { return nil}
-        let compiledModelURL = try MLModel.compileModel(at: url)
-        self.model = try MLModel(contentsOf: compiledModelURL)
+    if #available(iOS 14.0, *) {
+      do {
+        if (self.model == nil) {
+          guard let documentUrl = getDocumentDir() else { return nil}
+          guard let url = URL(string: "\(documentUrl)/\(ModelName)") else { return nil}
+          let compiledModelURL = try MLModel.compileModel(at: url)
+          self.model = try MLModel(contentsOf: compiledModelURL)
+        }
+        guard let modell = self.model else { return nil }
+        let nlmodel = try NLModel(mlModel: modell)
+        let predictionSet = nlmodel.predictedLabelHypotheses(for: input, maximumCount: 3)
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try jsonEncoder.encode(predictionSet)
+        return String(data: jsonData, encoding: String.Encoding.utf8)
+      } catch {
+        print(error)
+        return nil
       }
-      guard let modell = self.model else { return nil }
-      let nlmodel = try NLModel(mlModel: modell)
-      let predictionSet = nlmodel.predictedLabelHypotheses(for: input, maximumCount: 3)
-      let jsonEncoder = JSONEncoder()
-      let jsonData = try jsonEncoder.encode(predictionSet)
-      return String(data: jsonData, encoding: String.Encoding.utf8)
-    } catch {
-      print(error)
+    } else {
       return nil
     }
   }
